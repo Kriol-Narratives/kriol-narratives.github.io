@@ -1,16 +1,23 @@
-## Hi there 👋
+# Kriol Narratives
 
-<!--
-**kriolnarratives/kriolnarratives** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Plataforma web para el archivo de narrativas raizales de San Andrés, Providencia y Santa Catalina. Construida con Next.js, TypeScript y Tailwind CSS.
 
-Here are some ideas to get you started:
+## Desarrollo local
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+```bash
+npm install
+npm run dev
+```
+
+Abre [http://localhost:3000](http://localhost:3000) en el navegador.
+
+## Estado actual
+
+Maquetación visual con datos de contenido de ejemplo (dummy). Home, menú, categorías, resultados, detalle de historia (documento/audio/video/imagen/multiformato), Acerca de, Créditos, Aliados, Contacto y Memoria ya están construidos. Contenido real y conexión con la fuente de datos (Excel/Drive) pendientes de definir.
+
+## Stack
+
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS v4
+- react-pdf (visor de documentos)
