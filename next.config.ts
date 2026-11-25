@@ -15,7 +15,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [{ source: "/categoria/:path*", destination: "/:path*", permanent: false }];
   },
+  output: 'export',
   images: {
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "commons.wikimedia.org" },
       { protocol: "https", hostname: "upload.wikimedia.org" },
