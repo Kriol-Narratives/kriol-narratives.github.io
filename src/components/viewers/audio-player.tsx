@@ -1,8 +1,11 @@
 "use client";
 
-import { Pause, Play, Share2, SkipBack, SkipForward } from "lucide-react";
+import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import Image from "next/image";
+import { isWikimediaUrl } from "@/lib/cms/media-type";
 import { useEffect, useRef, useState } from "react";
+import { useText } from "@/lib/i18n/client";
+import { ShareButton } from "@/components/viewers/share-button";
 
 function formatTime(seconds: number) {
   if (!Number.isFinite(seconds)) return "0:00";
@@ -13,15 +16,18 @@ function formatTime(seconds: number) {
 
 export function AudioPlayer({
   coverImage,
-  src = "/media/sample-audio.mp3",
+  src,
 }: {
-  coverImage: string;
-  src?: string;
+  coverImage?: string | null;
+  src: string;
 }) {
+  const TEXT = useText();
+  const t = TEXT.Viewers;
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [coverFailed, setCoverFailed] = useState(false);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -92,14 +98,23 @@ export function AudioPlayer({
     <div className="w-full max-w-[480px]">
       <audio ref={audioRef} src={src} />
 
-      <div className="relative aspect-square w-full overflow-hidden rounded">
-        <Image src={coverImage} alt="" fill className="object-cover" />
+      <div className="relative aspect-square w-full overflow-hidden rounded bg-[#f0f0f0]">
+        {coverImage && !coverFailed ? (
+          <Image
+            src={coverImage}
+            alt=""
+            unoptimized={isWikimediaUrl(coverImage)}
+            fill
+            className="object-cover"
+            onError={() => setCoverFailed(true)}
+          />
+        ) : (
+          <Image src="/placeholders/audio.png" alt="" fill sizes="480px" className="object-cover" />
+        )}
       </div>
 
       <div className="mt-2.5 flex justify-end">
-        <button type="button" aria-label="Compartir" className="cursor-pointer text-black dark:text-cream">
-          <Share2 size={16} strokeWidth={2} />
-        </button>
+        <ShareButton iconSize={16} className="cursor-pointer text-black dark:text-cream" />
       </div>
 
       <div className="mt-4 flex items-center gap-3">
@@ -128,14 +143,14 @@ export function AudioPlayer({
         <button
           type="button"
           onClick={() => seekBy(-10)}
-          aria-label="Retroceder 10 segundos"
+          aria-label={t.rewind}
           className="cursor-pointer text-green"
         >
           <SkipBack size={22} strokeWidth={2} fill="currentColor" />
         </button>
         <button
           type="button"
-          aria-label={isPlaying ? "Pausar" : "Reproducir"}
+          aria-label={isPlaying ? t.pause : t.play}
           onClick={togglePlay}
           className="cursor-pointer text-green"
         >
@@ -148,7 +163,7 @@ export function AudioPlayer({
         <button
           type="button"
           onClick={() => seekBy(10)}
-          aria-label="Adelantar 10 segundos"
+          aria-label={t.forward}
           className="cursor-pointer text-green"
         >
           <SkipForward size={22} strokeWidth={2} fill="currentColor" />

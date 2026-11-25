@@ -1,19 +1,20 @@
 export type MediaType = "documento" | "audio" | "video" | "imagen" | "multiformato";
 
+// `key` maps to Messages.ContentTypes in src/lib/i18n/es.ts (same value as mediaType).
 export type ContentType = {
-  label: string;
+  key: MediaType;
   mediaType: MediaType;
 };
 
 export const contentTypes: ContentType[] = [
-  { label: "Documento", mediaType: "documento" },
-  { label: "Entrevista en audio", mediaType: "audio" },
-  { label: "Entrevista en video", mediaType: "video" },
-  { label: "Galería de imágenes", mediaType: "imagen" },
-  { label: "Multiformato", mediaType: "multiformato" },
+  { key: "documento", mediaType: "documento" },
+  { key: "audio", mediaType: "audio" },
+  { key: "video", mediaType: "video" },
+  { key: "imagen", mediaType: "imagen" },
+  { key: "multiformato", mediaType: "multiformato" },
 ];
 
-export const contentTypeLabels = contentTypes.map((type) => type.label);
+export const contentTypeKeys = contentTypes.map((type) => type.key);
 
 export const authors = ["Juana Catalina Gonzales Rodriguez", "Sebastian Rodrigo Gonzales Gutierrez"];
 

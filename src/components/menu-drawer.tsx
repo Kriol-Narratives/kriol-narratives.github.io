@@ -4,6 +4,7 @@ import { Plus, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { menuLinks } from "@/data/categories";
+import { useMenuItems, useText } from "@/lib/i18n/client";
 
 type MenuDrawerProps = {
   isOpen: boolean;
@@ -13,6 +14,11 @@ type MenuDrawerProps = {
 const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled])';
 
 export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
+  const TEXT = useText();
+  const t = TEXT.Common;
+  // Las opciones salen de la hoja `menu`; si falla o está vacía se usa el respaldo en español.
+  const sheetItems = useMenuItems();
+  const items = sheetItems.length > 0 ? sheetItems : menuLinks;
   const asideRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -73,7 +79,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
         ref={asideRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Menú principal"
+        aria-label={t.mainMenu}
         aria-hidden={!isOpen}
         className={`fixed inset-y-0 right-0 z-50 flex w-[85vw] max-w-[395px] flex-col bg-green px-8 py-6 text-white shadow-2xl transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -84,7 +90,7 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
             ref={closeButtonRef}
             type="button"
             onClick={onClose}
-            aria-label="Cerrar menú"
+            aria-label={t.closeMenu}
             tabIndex={isOpen ? 0 : -1}
             className="-m-2 cursor-pointer rounded p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
@@ -92,10 +98,12 @@ export function MenuDrawer({ isOpen, onClose }: MenuDrawerProps) {
           </button>
         </div>
         <nav className="mt-12 flex flex-col">
-          {menuLinks.map((link) => (
+          {items.map((link) => (
             <Link
-              key={link.label}
+              key={link.id}
               href={link.href}
+              // Enlaces externos (ej. Repositorio) en otra pestaña.
+              {...(/^https?:\/\//.test(link.href) && { target: "_blank", rel: "noopener noreferrer" })}
               onClick={onClose}
               tabIndex={isOpen ? 0 : -1}
               className="flex items-center justify-between gap-4 border-b border-white/50 py-3 font-display text-lg transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"

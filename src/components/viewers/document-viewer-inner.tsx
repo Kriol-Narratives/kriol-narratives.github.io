@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import { useText } from "@/lib/i18n/client";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -66,11 +67,9 @@ function useDragScroll(enabled: boolean) {
   return ref;
 }
 
-export function DocumentViewer({
-  fileUrl = "/documents/sample-multipage.pdf",
-}: {
-  fileUrl?: string;
-}) {
+export function DocumentViewer({ fileUrl }: { fileUrl?: string | null }) {
+  const TEXT = useText();
+  const t = TEXT.Viewers;
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [numPages, setNumPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -137,6 +136,7 @@ export function DocumentViewer({
   }
 
   function handleDownload() {
+    if (!fileUrl) return;
     const link = document.createElement("a");
     link.href = fileUrl;
     link.download = fileUrl.split("/").pop() ?? "documento.pdf";
@@ -147,6 +147,14 @@ export function DocumentViewer({
   const baseWidth = Math.min(isFullscreen ? 720 : 520, availableWidth);
   const pageWidth = baseWidth * (zoom / 100);
 
+  if (!fileUrl) {
+    return (
+      <div className="flex h-[300px] w-full max-w-[640px] items-center justify-center border border-[#d9d9d9] bg-[#525659] font-sans text-xs text-white">
+        {t.noDocument}
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -156,7 +164,7 @@ export function DocumentViewer({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            aria-label="Página anterior"
+            aria-label={t.previousPage}
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage <= 1}
             className="flex h-6 w-6 cursor-pointer items-center justify-center rounded bg-white/10 text-white disabled:cursor-not-allowed disabled:opacity-30"
@@ -168,7 +176,7 @@ export function DocumentViewer({
           </span>
           <button
             type="button"
-            aria-label="Página siguiente"
+            aria-label={t.nextPage}
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage >= numPages}
             className="flex h-6 w-6 cursor-pointer items-center justify-center rounded bg-white/10 text-white disabled:cursor-not-allowed disabled:opacity-30"
@@ -179,7 +187,7 @@ export function DocumentViewer({
         <div className="flex items-center gap-2.5">
           <button
             type="button"
-            aria-label="Alejar"
+            aria-label={t.zoomOut}
             onClick={() => setZoom((z) => Math.max(50, z - 10))}
             className="flex h-6 w-6 cursor-pointer items-center justify-center rounded bg-white/10 text-white"
           >
@@ -190,7 +198,7 @@ export function DocumentViewer({
           </span>
           <button
             type="button"
-            aria-label="Acercar"
+            aria-label={t.zoomIn}
             onClick={() => setZoom((z) => Math.min(200, z + 10))}
             className="flex h-6 w-6 cursor-pointer items-center justify-center rounded bg-white/10 text-white"
           >
@@ -199,7 +207,7 @@ export function DocumentViewer({
           <button
             type="button"
             onClick={handleDownload}
-            aria-label="Descargar"
+            aria-label={t.download}
             className="flex h-6 w-6 cursor-pointer items-center justify-center rounded bg-white/10 text-white"
           >
             <Download size={13} strokeWidth={2.5} />
@@ -207,7 +215,7 @@ export function DocumentViewer({
           <button
             type="button"
             onClick={toggleFullscreen}
-            aria-label={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+            aria-label={isFullscreen ? t.exitFullscreen : t.fullscreen}
             className="flex h-6 w-6 cursor-pointer items-center justify-center rounded bg-white/10 text-white"
           >
             {isFullscreen ? (

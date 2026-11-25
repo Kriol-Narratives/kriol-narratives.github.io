@@ -65,11 +65,12 @@ export const categories: Category[] = [
   },
 ];
 
+// Menú de respaldo (solo español) para cuando la hoja `menu` falla o está vacía. Los textos reales,
+// en cada idioma, salen de la hoja `menu`.
 export const menuLinks = [
-  { label: "Acerca de este proyecto", href: "/acerca-de" },
-  { label: "Memorias", href: "/memorias" },
-  { label: "Aliados", href: "/aliados" },
-  { label: "Contacto", href: "/contacto" },
-  { label: "Repositorio", href: "#" },
-  { label: "Créditos", href: "/creditos" },
+  { id: "about", label: "Acerca de este proyecto", href: "/acerca-de" },
+  { id: "memories", label: "Memorias", href: "/memorias" },
+  { id: "allies", label: "Aliados", href: "/aliados" },
+  { id: "contact", label: "Contacto", href: "/contacto" },
+  { id: "credits", label: "Créditos", href: "/creditos" },
 ];

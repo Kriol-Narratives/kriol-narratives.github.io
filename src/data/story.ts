@@ -59,8 +59,8 @@ export type RelatedItem = {
 };
 
 export function getRelatedItems(): RelatedItem[] {
-  return contentTypes.map(({ label }, index) => ({
-    type: label,
+  return contentTypes.map(({ key }, index) => ({
+    type: key,
     title: "Lorem ipsum dolor sit amet, consectetur",
     author: "Juana Catalina Gonzales Rodriguez",
     image: categories[index % categories.length].image,

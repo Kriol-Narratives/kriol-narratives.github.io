@@ -30,6 +30,10 @@ body {
   color: var(--color-cream);
 }
 
+button:not(:disabled), [role="button"] {
+  cursor: pointer;
+}
+
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -37,4 +41,60 @@ body {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.doc-content {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-black);
+}
+.dark .doc-content {
+  color: var(--color-cream);
+}
+.doc-content h1,
+.doc-content h2,
+.doc-content h3 {
+  font-family: var(--font-display);
+  margin: 1.5em 0 0.5em;
+}
+.doc-content h1 {
+  font-size: 1.5rem;
+}
+.doc-content h2 {
+  font-size: 1.25rem;
+}
+.doc-content p {
+  margin-bottom: 1em;
+}
+.doc-content p:empty {
+  display: none;
+}
+
+.doc-compact p {
+  margin-bottom: 0;
+}
+.doc-compact p:empty {
+  display: block;
+  height: 1em;
+}
+.doc-content a {
+  color: var(--color-green);
+  text-decoration: underline;
+}
+/* Colores del Word: en modo oscuro se mezclan con crema para que no pierdan contraste sobre el fondo oscuro. */
+.dark .doc-content [style*="--doc-color"] {
+  color: color-mix(in srgb, var(--doc-color) 45%, var(--color-cream)) !important;
+}
+.doc-content img {
+  /* Tailwind pone las imágenes en display:block; en el documento van en línea (varias en la misma fila). */
+  display: inline-block;
+  vertical-align: top;
+  max-width: 100%;
+  height: auto;
+  margin: 0.5em 0;
+}
+.doc-content ul,
+.doc-content ol {
+  margin: 0 0 1em 1.25em;
 }
