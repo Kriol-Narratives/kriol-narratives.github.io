@@ -154,6 +154,11 @@ function text(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
+/** seo title por idioma */
+function seoTitle(row: Row, locale: Locale): string | null {
+  return text(row[`seo_title_custom_${COLUMN_SUFFIX[locale]}`]) ?? text(row.seo_title_custom);
+}
+
 /** Los slugs de una fila en todos los idiomas, para encontrar la misma entrada desde un link de otro idioma. */
 function allSlugs(row: Row): string[] {
   const slugs = ALL_LOCALES.map((locale) => text(row[`slug_${COLUMN_SUFFIX[locale]}`]));
@@ -298,8 +303,7 @@ export async function getInstitucionalFromSheets(locale: Locale = "es"): Promise
         slug,
         slugAliases: allSlugs(row).filter((alias) => alias !== slug),
         estado: row.estado === "Publicado" ? "Publicado" : "Borrador",
-        // seo_title_custom_kr / _en; vacía usa seo_title_custom.
-        seoTitle: text(row[`seo_title_custom_${COLUMN_SUFFIX[locale]}`]) ?? text(row.seo_title_custom),
+        seoTitle: seoTitle(row, locale),
         seoDescription: (row.seo_description as string) ?? null,
         coverUrl: resolveCoverUrl(row.custom_cover_url),
         googleDocsId: googleDocId(localized(row, "enlace", locale)),
@@ -392,7 +396,7 @@ export async function getMemoriasFromSheets(locale: Locale = "es"): Promise<Memo
         slug,
         slugAliases: allSlugs(row).filter((alias) => alias !== slug),
         estado: row.estado === "Publicado" ? "Publicado" : "Borrador",
-        seoTitle: text(row.seo_title_custom),
+        seoTitle: seoTitle(row, locale),
         seoDescription: text(row.seo_description),
         coverUrl: resolveCoverUrl(row.custom_cover_url),
         googleDocsId: googleDocId(localized(row, "enlace", locale)),
